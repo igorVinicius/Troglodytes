@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build">
+	<path id="build.classpath">
+		<pathelement location="classes"/>
+	</path>
+	<target name="init">
+		<mkdir dir="classes"/>
+	</target>
+	<target name="clean">
+		<delete dir="classes"/>
+	</target>
+	<target depends="init" name="build">
+		<javac srcdir="." destdir="classes" source="1.5" target="1.5" fork="yes">
+			<classpath refid="build.classpath"/>
+			<include name="Principal/ImagemDeTabuleiro.java"/>
+			<include name="Principal/AtorJogador.java"/>
+			<include name="Principal/Tabuleiro.java"/>
+			<include name="Principal/Posicao.java"/>
+			<include name="Principal/Jogador.java"/>
+			<include name="Principal/Troglodita.java"/>
+			<include name="Principal/Lance.java"/>
+			<include name="Principal/AtorNetGames.java"/>
+			<include name="NetGames/Jogada.java"/>
+			<include name="NetGames/Proxy.java"/>
+			<include name="OuvidorProxy.java"/>
+		</javac>
+	</target>
+</project>
