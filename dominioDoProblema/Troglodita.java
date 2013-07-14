@@ -5,14 +5,15 @@ public class Troglodita {
 	protected Jogador jogadorDono;
 
 	public Posicao peguePosicao() {
-		throw new UnsupportedOperationException();
+		return posicaoOcupada;
 	}
 
-	public boolean jogadorDono() {
-		throw new UnsupportedOperationException();
+	public boolean jogadorDono(Jogador possivelDono) {
+		return possivelDono == jogadorDono;
+		
 	}
 
 	public boolean retorneSimbolo() {
-		throw new UnsupportedOperationException();
+		return jogadorDono.obterSimbolo();
 	}
 }

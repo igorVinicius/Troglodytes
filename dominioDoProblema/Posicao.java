@@ -1,7 +1,7 @@
 package dominioDoProblema;
 
 public class Posicao {
-	protected boolean _cupada;
+	protected boolean ocupada;
 	protected int linha;
 	protected int coluna;
 	protected Troglodita troglodita;

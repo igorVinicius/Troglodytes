@@ -1,14 +1,16 @@
 package dominioDoProblema;
 
+import java.util.ArrayList;
+
 public class Jogador {
 	protected String nome;
-	protected Troglodita <<collection>>_personagens;
+	protected ArrayList<Troglodita> personagens;
 	protected boolean vencedor;
 	protected boolean daVez;
 	protected boolean simbolo;
-
+	
 	public boolean obterDaVez() {
-		throw new UnsupportedOperationException();
+		return daVez;
 	}
 
 	public void defineVencedor() {
@@ -19,11 +21,13 @@ public class Jogador {
 		throw new UnsupportedOperationException();
 	}
 
-	public void defineDaVez(boolean aDaVez) {
-		throw new UnsupportedOperationException();
+	public void defineDaVez(boolean daVez) {
+		this.daVez = daVez;
 	}
 
 	public boolean haTrogloditas() {
 		throw new UnsupportedOperationException();
 	}
+	
+	
 }
