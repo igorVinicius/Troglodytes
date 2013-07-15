@@ -75,7 +75,7 @@ public class Tabuleiro {
 			return false;
 		} else {
 
-			if (jogador1.obterDaVez()) { 													// MENSAGEM
+			if (jogador1.obterDaVez()) {
 
 				distanciaVertical = (sentidoVertical == 1
 						&& diferencaEntreColunas && sentidoHorizontal != 1);
@@ -104,21 +104,27 @@ public class Tabuleiro {
 		}
 	}
 
-	protected boolean gereciaPecaNosIntervalos(int linhaA, int colunaA,							//MUDANCÇA DE NOME DE MÉTODO
+	protected boolean gereciaPecaNosIntervalos(int linhaA, int colunaA,
 			int linhaB, int colunaB) {
 		
 		//Retorna true se não existiam peças ou existiam adversários e 
 		// 		  false se existia própria peça no intervalo
 		
-		boolean linhaPar = (linhaA%2 == 0);
-		boolean movimentacaoSentidoVertical = (linhaA == linhaB) ? false : true;
+		boolean linhaPar;
+		boolean movimentacaoSentidoVertical;
 		boolean simboloOutroTroglodita;
-		boolean simboloTrogloditaSelecionado = trogloditaSelecionado.retorneSimbolo();  				//MENSAGEM
+		boolean simboloTrogloditaSelecionado;
 		boolean removerTrogloditaP1 = false;
 		boolean removerTrogloditaP2 = false;
+		boolean ocupada;
 		
 		Posicao ocupacaoP1 = posicoes[linhaB][colunaB];
 		Posicao ocupacaoP2;
+		
+		linhaPar = (linhaA % 2 == 0);
+		movimentacaoSentidoVertical = (linhaA == linhaB) ? false : true;
+		simboloTrogloditaSelecionado = trogloditaSelecionado.retorneSimbolo();
+		ocupada = ocupacaoP1.estaOcupada();
 		
 		if(movimentacaoSentidoVertical){
 			if(linhaPar){
@@ -129,18 +135,20 @@ public class Tabuleiro {
 				else ocupacaoP2 = posicoes[linhaB][colunaB - 1];
 			}
 			
-			if(ocupacaoP1.estaOcupada()){
+			if(ocupada){
 				simboloOutroTroglodita = ocupacaoP1.retorneTroglodita().retorneSimbolo();
 				
-				if(simboloOutroTroglodita != simboloTrogloditaSelecionado){									//MENSAGEM
+				if(simboloOutroTroglodita != simboloTrogloditaSelecionado){
 					removerTrogloditaP1 = true;
 				} else {
 					return false;
 				}
 			}
 			
-			if(ocupacaoP2.estaOcupada()){
-				simboloOutroTroglodita = ocupacaoP2.retorneTroglodita().retorneSimbolo();					//MENSAGEM
+			ocupada = ocupacaoP2.estaOcupada();
+			
+			if(ocupada){
+				simboloOutroTroglodita = ocupacaoP2.retorneTroglodita().retorneSimbolo();
 				
 				if(simboloOutroTroglodita != simboloTrogloditaSelecionado){
 					removerTrogloditaP2 = true;
@@ -149,16 +157,15 @@ public class Tabuleiro {
 				}
 			}
 			
-			if(removerTrogloditaP1) this.removeTroglodita(linhaB, colunaB);									//MENSAGEM
-			if(removerTrogloditaP2) this.removeTroglodita(linhaB, ocupacaoP2.pegueColuna());				//MENSAGEM
+			if(removerTrogloditaP1) this.removeTroglodita(linhaB, colunaB);
+			if(removerTrogloditaP2) this.removeTroglodita(linhaB, ocupacaoP2.pegueColuna());
 			
-		} else {
-			
-			if(ocupacaoP1.estaOcupada()){
-				simboloOutroTroglodita = ocupacaoP1.retorneTroglodita().retorneSimbolo();					//MENSAGEM
+		} else {			
+			if(ocupada){
+				simboloOutroTroglodita = ocupacaoP1.retorneTroglodita().retorneSimbolo();
 				
 				if(simboloOutroTroglodita != simboloTrogloditaSelecionado){
-					this.removeTroglodita(linhaB, colunaB);													//MENSAGEM
+					this.removeTroglodita(linhaB, colunaB);
 				} else {
 					return false;
 				}
@@ -189,20 +196,102 @@ public class Tabuleiro {
 		}
 	}
 
-	protected void removeTroglodita(int linhaB, int colunaB) {									//MUDEI OS PARÂMETROS E NOMES
-		//throw new UnsupportedOperationException();
+	protected void removeTroglodita(int linhaB, int colunaB) {
+		Posicao posicao = posicoes[linhaB][colunaB];
+		Troglodita aRemover = posicao.retorneTroglodita();											//MENSAGEM
+		boolean quemEhDono = (aRemover.jogadorDono(jogador1)) ? true : false;						//MENSAGEM
 		
+		posicao.removeTroglodita();																	//MENSAGEM
 		
-		
-		System.out.println("Troglodita Removido, na linha " + linhaB + " e coluna " + colunaB);
+		if(quemEhDono) jogador1.removeTroglodita(aRemover);											//MENSAGEM
+		else jogador2.removeTroglodita(aRemover); 													//MENSAGEM
 	}
 
-	protected void mover(int linhaFinal, int colunaFinal) {
-		throw new UnsupportedOperationException();
+	protected void mover(int linhaA, int colunaA, int linhaB, int colunaB) {
+		boolean linhaPar;
+		boolean movimentacaoSentidoVertical;
+		Posicao posicaoInicial;
+		Posicao posicaoFinal1;
+		Posicao posicaoFinal2;
+		
+		linhaPar = (linhaA % 2 == 0);
+		movimentacaoSentidoVertical = (linhaA == linhaB) ? false : true;
+		
+		posicaoInicial = posicoes[linhaA][colunaA];
+		posicaoFinal1 = posicoes[linhaB][colunaB];
+		
+		Troglodita aMover = posicaoInicial.retorneTroglodita();										//MENSAGEM
+		
+		if(movimentacaoSentidoVertical){
+			Troglodita novoTroglodita;
+			
+			if(linhaPar){
+				if(colunaA == colunaB) posicaoFinal2 = posicoes[linhaB][colunaB - 1];
+				else posicaoFinal2 = posicoes[linhaB][colunaB + 1];
+			} else {
+				if(colunaA == colunaB) posicaoFinal2 = posicoes[linhaB][colunaB + 1];
+				else posicaoFinal2 = posicoes[linhaB][colunaB - 1];
+			}
+			
+			//Multiplicar troglodita
+			
+			novoTroglodita = this.jogadorDaVez().criarTroglodita();
+			
+			posicaoFinal2.definaTroglodita(novoTroglodita);											//MENSAGEM
+		}
+		
+		posicaoInicial.removeTroglodita();															//MENSAGEM
+		posicaoFinal1.definaTroglodita(aMover);														//MENSAGEM
 	}
 
 	protected boolean verificaVencedor() {
-		throw new UnsupportedOperationException();
+		boolean daVez = jogador1.obterDaVez();														//MENSAGEM
+		boolean ocupada;
+		boolean haAdversarios;
+		Troglodita troglodita;
+		
+		//Verifica se não há trogloditas adversários, e depois se há próprio troglodita na última linha.
+		if(daVez){
+			haAdversarios = jogador2.haTrogloditas();												//MENSAGEM
+			
+			if(!haAdversarios){
+				return true;
+			}
+			
+			boolean simboloJogador1 = jogador1.obterSimbolo();										//MENSAGEM
+			
+			for(Posicao posicao : posicoes[0]){
+				ocupada = posicao.estaOcupada();													//MENSAGEM
+				
+				if(ocupada){
+					troglodita = posicao.retorneTroglodita();										//MENSAGEM
+					if(simboloJogador1 == troglodita.retorneSimbolo()){								//MENSAGEM
+						return true;
+					}
+				}
+			}
+		} else {
+			haAdversarios = jogador1.haTrogloditas();												//MENSAGEM
+			
+			if(!haAdversarios){
+				return true;
+			}
+			
+			boolean simboloJogador2 = jogador2.obterSimbolo();										//MENSAGEM
+			
+			for(Posicao posicao : posicoes[posicoes.length - 1]){									//MENSAGEM
+				ocupada = posicao.estaOcupada();													//MENSAGEM
+				
+				if(ocupada){
+					troglodita = posicao.retorneTroglodita();										//MENSAGEM
+					if(simboloJogador2 == troglodita.retorneSimbolo()){								//MENSAGEM
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	protected boolean retornaSimboloDaVez() {

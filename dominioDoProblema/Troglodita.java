@@ -12,6 +12,10 @@ public class Troglodita {
 		return possivelDono == jogadorDono;
 		
 	}
+	
+	public void defineJogadorDono(Jogador novoDono){
+		jogadorDono = novoDono;
+	}
 
 	public boolean retorneSimbolo() {
 		return jogadorDono.obterSimbolo();

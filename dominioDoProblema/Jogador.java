@@ -26,8 +26,18 @@ public class Jogador {
 	}
 
 	public boolean haTrogloditas() {
-		throw new UnsupportedOperationException();
+		return !personagens.isEmpty();
 	}
 	
+	public void removeTroglodita(Troglodita aRemover){
+		personagens.remove(aRemover);
+	}
+	
+	public Troglodita criarTroglodita(){
+		Troglodita novo = new Troglodita();
+		novo.defineJogadorDono(this);
+		personagens.add(novo);
+		return novo;
+	}
 	
 }
