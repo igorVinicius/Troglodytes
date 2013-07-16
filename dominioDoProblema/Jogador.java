@@ -9,20 +9,44 @@ public class Jogador {
 	protected boolean daVez;
 	protected boolean simbolo;
 	
+	public Jogador(String nome, int numeroTrogloditas){
+		this.iniciar(nome);																						//MENSAGEM
+		
+		for(int i = 0; i < numeroTrogloditas; i++){
+			Troglodita auxiliar = this.criarTroglodita();														//MENSAGEM
+			personagens.add(auxiliar);
+		}
+	}
+	
+	protected void iniciar(String nome) {
+		personagens = new ArrayList<Troglodita>();
+		daVez = false;
+		vencedor = false;
+		this.nome = nome;
+	}
+	
 	public boolean obterDaVez() {
 		return daVez;
 	}
+	
+	public void defineDaVez(boolean daVez) {
+		this.daVez = daVez;
+	}
 
 	public void defineVencedor() {
-		throw new UnsupportedOperationException();
+		vencedor = true;
+	}
+	
+	public boolean ehVencedor(){
+		return vencedor;
 	}
 
 	public boolean obterSimbolo() {
-		throw new UnsupportedOperationException();
+		return simbolo;
 	}
-
-	public void defineDaVez(boolean daVez) {
-		this.daVez = daVez;
+	
+	public void assumirSimbolo(boolean simbolo) {
+		this.simbolo = simbolo;
 	}
 
 	public boolean haTrogloditas() {
@@ -38,6 +62,14 @@ public class Jogador {
 		novo.defineJogadorDono(this);
 		personagens.add(novo);
 		return novo;
+	}
+	
+	public String obterNome(){
+		return nome;
+	}
+
+	public Troglodita retorneTroglodita(int index) {
+		return personagens.get(index);
 	}
 	
 }

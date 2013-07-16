@@ -7,26 +7,28 @@ public class Posicao {
 	protected Troglodita troglodita;
 
 	public boolean estaOcupada() {
-		throw new UnsupportedOperationException();
+		return ocupada;
 	}
 
 	public int pegueLinha() {
-		throw new UnsupportedOperationException();
+		return linha;
 	}
 
 	public int pegueColuna() {
-		throw new UnsupportedOperationException();
+		return coluna;
 	}
 
 	public Troglodita retorneTroglodita() {
-		throw new UnsupportedOperationException();
+		return troglodita;
 	}
 	
 	public void removeTroglodita(){
 		troglodita = null;
+		ocupada = false;
 	}
 	
 	public void definaTroglodita(Troglodita troglodita){
 		this.troglodita = troglodita;
+		ocupada = true;
 	}
 }
