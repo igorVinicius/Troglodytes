@@ -13,8 +13,7 @@ public class Jogador {
 		this.iniciar(nome);																						//MENSAGEM
 		
 		for(int i = 0; i < numeroTrogloditas; i++){
-			Troglodita auxiliar = this.criarTroglodita();														//MENSAGEM
-			personagens.add(auxiliar);
+			this.criarTroglodita();														//MENSAGEM
 		}
 	}
 	

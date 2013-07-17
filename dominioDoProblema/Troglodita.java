@@ -7,6 +7,10 @@ public class Troglodita {
 	public Posicao peguePosicao() {
 		return posicaoOcupada;
 	}
+	
+	public void definaPosicao(Posicao posicao){
+		this.posicaoOcupada = posicao;
+	}
 
 	public boolean jogadorDono(Jogador possivelDono) {
 		return possivelDono == jogadorDono;

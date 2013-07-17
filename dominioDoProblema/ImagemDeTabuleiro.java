@@ -13,6 +13,10 @@ public class ImagemDeTabuleiro {
 		return mapa;
 	}
 	
+	public int informarValor(int linha, int coluna){
+		return mapa[linha][coluna];
+	}
+	
 //	public String mensagem(){
 //		return mensagem;
 //	}

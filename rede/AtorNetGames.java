@@ -15,24 +15,27 @@ import br.ufsc.inf.leobr.cliente.exception.NaoJogandoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
 
 public class AtorNetGames implements OuvidorProxy {
+	
+	private static final long serialVersionUID = 1L;
+	
 	protected AtorJogador interfaceGrafica;
 	protected Proxy proxy;
 
-	public void enviarJogada(Lance aLance) {
-		try {
-			proxy.enviaJogada(lance);
-		} catch (NaoJogandoException e) {
-			JOptionPane.showMessageDialog(interfaceGrafica.informarJanela(), e.getMessage());
-			e.printStackTrace();
-		}
+	
+	public AtorNetGames(AtorJogador interfaceGrafica){
+		super();
+		this.interfaceGrafica = interfaceGrafica;
+		this.proxy = Proxy.getInstance();
+		proxy.addOuvinte(this);	
 	}
-
+	
+	
 	public boolean conectar(String servidor, String nome) {
 		try {
 			proxy.conectar(servidor, nome);
 			return true;
 		} catch (JahConectadoException e) {
-			JOptionPane.showMessageDialog(interfaceGrafica.informaJanela(), e.getMessage());
+			JOptionPane.showMessageDialog(interfaceGrafica.informarJanela(), e.getMessage());
 			e.printStackTrace();
 			return false;
 		} catch (NaoPossivelConectarException e) {
@@ -65,17 +68,41 @@ public class AtorNetGames implements OuvidorProxy {
 			e.printStackTrace();
 		}
 	}
-
-	public void receberJogada(Lance aLance) {
-		throw new UnsupportedOperationException();
+	
+	@Override
+	public void iniciarNovaPartida(Integer posicao) {
+		interfaceGrafica.tratarIniciarPartida(posicao);
+	}
+	
+	public void enviarJogada(Lance lance) {
+		try {
+			proxy.enviaJogada((Jogada) lance);
+		} catch (NaoJogandoException e) {
+			JOptionPane.showMessageDialog(interfaceGrafica.informarJanela(), e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
-	public void iniciarNovaPartida(Integer aPosicao) {
-		throw new UnsupportedOperationException();
+	public void receberJogada(Lance lance) {
+		Lance estado = (Lance) lance;
+		interfaceGrafica.receberLance(estado);
 	}
 
-	public String informarNomeAdversario() {
-		throw new UnsupportedOperationException();
+	
+
+	public String informarNomeAdversario(String idUsuario) {
+		String aux1 = proxy.obterNomeAdversario(new Integer(1));
+		String aux2 = proxy.obterNomeAdversario(new Integer(2));;
+		if (aux1.equals(idUsuario)){
+			return aux2;
+		} else {
+			return aux1;
+		}		
+	}
+	
+	@Override
+	public void receberJogada(Jogada jogada) {
+		interfaceGrafica.receberLance((Lance) jogada);
 	}
 
 	public void finalizarPartidaComErro(String aMessage) {
@@ -83,10 +110,6 @@ public class AtorNetGames implements OuvidorProxy {
 	}
 
 	public void receberMensagem(String aMessage) {
-		throw new UnsupportedOperationException();
-	}
-
-	public void receberJogada(Jogada aJogada) {
 		throw new UnsupportedOperationException();
 	}
 

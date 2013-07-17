@@ -5,9 +5,18 @@ public class Posicao {
 	protected int linha;
 	protected int coluna;
 	protected Troglodita troglodita;
+	
+	public Posicao(int linha, int coluna){
+		this.linha = linha;
+		this.coluna = coluna;
+	}
 
 	public boolean estaOcupada() {
 		return ocupada;
+	}
+	
+	public void definaOcupada(boolean ocupada){
+		this.ocupada = ocupada;
 	}
 
 	public int pegueLinha() {
@@ -23,12 +32,14 @@ public class Posicao {
 	}
 	
 	public void removeTroglodita(){
+		troglodita.definaPosicao(null);
 		troglodita = null;
 		ocupada = false;
 	}
 	
 	public void definaTroglodita(Troglodita troglodita){
 		this.troglodita = troglodita;
+		troglodita.definaPosicao(this);
 		ocupada = true;
 	}
 }

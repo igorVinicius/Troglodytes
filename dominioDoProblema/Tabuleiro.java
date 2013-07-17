@@ -10,53 +10,63 @@ public class Tabuleiro {
 	protected Troglodita trogloditaSelecionado;
 	protected AtorJogador atorJogador;
 	
+	/*
 	public static void main(String[] args){
 		Tabuleiro a = new Tabuleiro();
 		Jogador jog = new Jogador("Guilherme", 11);
-		jog.defineDaVez(false);
+		jog.defineDaVez(true);
 		a.jogador1 = jog;
 		a.posicoes = new Posicao[7][10];
 		
-		int linhas;
-		int colunas;
-		int numeroTrogloditasPorJogador;
-		
-		
-		linhas = a.posicoes.length;
-		colunas = a.posicoes[0].length;
-		numeroTrogloditasPorJogador = ( ((((linhas - 1) / 2) + 1) * (colunas)) + 
-				(((linhas - 1) / 2) * (colunas - 1)) ) / 4;
-		
-		System.out.println(numeroTrogloditasPorJogador);
-		System.out.println(a.distanciaPermitida(0, 6, 1, 4));
+		System.out.println(a.distanciaPermitida(3, 3, 2, 5));
 		System.out.println(a.verificaBlocosSuficientes(0, 6, 1, 4));
 	}
-	
+	*/
+		
 	/**
 	 * MÉTODOS REFERENTES A LÓGICA DO JOGO
 	 */
+	
+	public Tabuleiro(AtorJogador ator){
+		int quantidadeLinhas = 7;
+		int quatidadeColunas = 7;
+		
+		posicoes = new Posicao[7][7];
+		
+		for (int linha = 0; linha < quantidadeLinhas; linha++){
+			for (int coluna = 0; coluna < quatidadeColunas; coluna++){
+				posicoes[(linha)][(coluna)] = new Posicao(linha, coluna);
+			}
+		}
+		
+		this.atorJogador = ator;
+	}
 
 	public int recebeClick(int linha, int coluna) {
 		boolean daVez = jogador1.obterDaVez();
 		
-		if(daVez){
-			if(pecaSelecionada){
-				return this.tratarLance(linha, coluna);
-			} else {
-				return this.selecionarPeca(linha, coluna);
+		if(partidaEmAndamento){
+			if(daVez){
+				if(pecaSelecionada){
+					return this.tratarLance(linha, coluna);
+				} else {
+					return this.selecionarPeca(linha, coluna);
+				}
 			}
+			return 8;
 		}
-		 return 8;
+		return 18;
 	}
 	
-	public void executarLanceRecebido(Lance lance) {
+	public int executarLanceRecebido(Lance lance) {															//MUDAR ASSINATURA
 		int linhaA = lance.pegueLinhaOrigem();
 		int colunaA = lance.pegueColunaOrigem();
 		int linhaB = lance.pegueLinhaDestino();
 		int colunaB = lance.pegueColunaDestino();
+		System.out.println("JOGADA RECEBIDA");
 		
 		this.selecionarPeca(linhaA, colunaA);														
-		this.tratarLance(linhaB, colunaB);															
+		return this.tratarLance(linhaB, colunaB);															
 	}
 	
 	public int selecionarPeca(int linha, int coluna) {
@@ -110,20 +120,22 @@ public class Tabuleiro {
 				bemSucedido = this.gereciaPecaNosIntervalos(linhaA, colunaA, linhaB, colunaB);
 				
 				if(bemSucedido){
+					
 					this.mover(linhaA, colunaA, linhaB, colunaB);
 					
 					vencedor = this.verificaVencedor();
-					if(vencedor){
+					
+					if(vencedor){						
 						trogloditaSelecionado = null;
 						pecaSelecionada = false;
 						partidaEmAndamento = false;
 						
+						Lance novoLance = new Lance(linhaA, colunaA, linhaB, colunaB);
+						
+						atorJogador.enviarJogada(novoLance);
+						
 						return 9;
 					}
-					
-					Lance novoLance = new Lance(linhaA, colunaA, linhaB, colunaB);
-					
-					atorJogador.enviarJogada(novoLance);
 					
 					boolean daVez = jogador1.obterDaVez();
 					
@@ -135,15 +147,31 @@ public class Tabuleiro {
 						jogador1.defineDaVez(true);
 					}
 					
+					trogloditaSelecionado = null;
+					pecaSelecionada = false;
+					
+					Lance novoLance = new Lance(linhaA, colunaA, linhaB, colunaB);
+					
+					atorJogador.enviarJogada(novoLance);
+					
 					return 10;
 					
 				} else {
+					trogloditaSelecionado = null;
+					pecaSelecionada = false;
+					
 					return 15;
 				}
 			} else {
+				trogloditaSelecionado = null;
+				pecaSelecionada = false;
+				
 				return 14;
 			}
 		} else {
+			trogloditaSelecionado = null;
+			pecaSelecionada = false;
+			
 			return 13;
 		}		
 		
@@ -191,9 +219,14 @@ public class Tabuleiro {
 		} else {
 
 			if (jogador1.obterDaVez()) {
-
-				distanciaVertical = (sentidoVertical == 1
-						&& diferencaEntreColunas && sentidoHorizontal != 1);
+				
+				if(linhaA % 2 == 0) {
+					distanciaVertical = (sentidoVertical == 1
+						&& diferencaEntreColunas && sentidoHorizontal != 2);					
+				} else {
+					distanciaVertical = (sentidoVertical == 1
+							&& diferencaEntreColunas && sentidoHorizontal != 1);
+				}				
 
 				// Está subindo, a diferença entre as colunas é 0 ou 1 (NÃO PODE
 				// SER MAIS QUE 1, pois assim estaria andando
@@ -201,8 +234,15 @@ public class Tabuleiro {
 				// abstração feita do tabuleiro)
 
 			} else {
-				distanciaVertical = ((linhaA - linhaB) == -1
+				
+				if(linhaA % 2 == 0) {
+					distanciaVertical = ((linhaA - linhaB) == -1
 						&& diferencaEntreColunas && sentidoHorizontal != 2);
+				} else {
+					distanciaVertical = ((linhaA - linhaB) == -1
+							&& diferencaEntreColunas && sentidoHorizontal != 1);
+				}
+				
 
 				// Está subindo, a diferença entre as colunas é 0 ou 1 (NÃO PODE
 				// SER MAIS QUE 1, pois assim estaria andando
@@ -340,7 +380,6 @@ public class Tabuleiro {
 			//Multiplicar troglodita
 			
 			novoTroglodita = this.jogadorDaVez().criarTroglodita();
-			
 			posicaoFinal2.definaTroglodita(novoTroglodita);
 		}
 		
@@ -370,25 +409,25 @@ public class Tabuleiro {
 		if(daVez){
 			haAdversarios = jogador2.haTrogloditas();
 			
+			System.out.println(haAdversarios);
+			
 			if(!haAdversarios){
 				return true;
 			}
 			
 			boolean simboloJogador1 = jogador1.obterSimbolo();
-			
-			for(int i = 0; i < posicoes.length; i++){												//MODIFICAÇÃO
-				for(int j = 0; j < posicoes[0].length; j++){										//MODIFICAÇÃO
-					posicaoTemporaria = posicoes[i][j];
-					ocupada = posicaoTemporaria.estaOcupada();										//MENSAGEM
-					
-					if(ocupada){
-						troglodita = posicaoTemporaria.retorneTroglodita();
-						if(simboloJogador1 == troglodita.retorneSimbolo()){
-							jogador1.defineDaVez(false);
-							jogador1.defineVencedor();
-							
-							return true;
-						}
+																								//MODIFICAÇÃO
+			for(int j = 0; j < posicoes[0].length; j++){										//MODIFICAÇÃO
+				posicaoTemporaria = posicoes[0][j];
+				ocupada = posicaoTemporaria.estaOcupada();										//MENSAGEM
+				
+				if(ocupada){
+					troglodita = posicaoTemporaria.retorneTroglodita();
+					if(simboloJogador1 == troglodita.retorneSimbolo()){
+						jogador1.defineDaVez(false);
+						jogador1.defineVencedor();
+						
+						return true;
 					}
 				}
 			}
@@ -400,20 +439,18 @@ public class Tabuleiro {
 			}
 			
 			boolean simboloJogador2 = jogador2.obterSimbolo();
-			
-			for(int i = 0; i < posicoes.length; i++){												//MODIFICAÇÃO
-				for(int j = 0; j < posicoes[0].length; j++){										//MODIFICAÇÃO
-					posicaoTemporaria = posicoes[i][j];
-					ocupada = posicaoTemporaria.estaOcupada();										//MENSAGEM
-					
-					if(ocupada){
-						troglodita = posicaoTemporaria.retorneTroglodita();
-						if(simboloJogador2 == troglodita.retorneSimbolo()){
-							jogador2.defineDaVez(false);
-							jogador2.defineVencedor();
-							
-							return true;
-						}
+																									//MODIFICAÇÃO
+			for(int j = 0; j < posicoes[0].length; j++){										//MODIFICAÇÃO
+				posicaoTemporaria = posicoes[6][j];
+				ocupada = posicaoTemporaria.estaOcupada();										//MENSAGEM
+				
+				if(ocupada){
+					troglodita = posicaoTemporaria.retorneTroglodita();
+					if(simboloJogador2 == troglodita.retorneSimbolo()){
+						jogador2.defineDaVez(false);
+						jogador2.defineVencedor();
+						
+						return true;
 					}
 				}
 			}
@@ -422,9 +459,49 @@ public class Tabuleiro {
 		return false;
 	}
 	
+	public void posicionarTrogloditas() {															//MUDAR ASSINATURA
+		
+			//Jogador 2:
+			
+			posicoes[0][2].definaTroglodita(jogador2.retorneTroglodita(0));
+			posicoes[0][3].definaTroglodita(jogador2.retorneTroglodita(1));
+			posicoes[0][4].definaTroglodita(jogador2.retorneTroglodita(2));
+			posicoes[1][0].definaTroglodita(jogador2.retorneTroglodita(3));
+			posicoes[1][1].definaTroglodita(jogador2.retorneTroglodita(4));
+			posicoes[1][2].definaTroglodita(jogador2.retorneTroglodita(5));
+			posicoes[1][3].definaTroglodita(jogador2.retorneTroglodita(6));
+			posicoes[1][4].definaTroglodita(jogador2.retorneTroglodita(7));
+			posicoes[1][5].definaTroglodita(jogador2.retorneTroglodita(8));
+			posicoes[2][2].definaTroglodita(jogador2.retorneTroglodita(9));
+			posicoes[2][3].definaTroglodita(jogador2.retorneTroglodita(10));
+			posicoes[2][4].definaTroglodita(jogador2.retorneTroglodita(11));
+			
+			//Jogador 1:
+			
+			posicoes[4][2].definaTroglodita(jogador1.retorneTroglodita(0));
+			posicoes[4][3].definaTroglodita(jogador1.retorneTroglodita(1));
+			posicoes[4][4].definaTroglodita(jogador1.retorneTroglodita(2));
+			posicoes[5][0].definaTroglodita(jogador1.retorneTroglodita(3));
+			posicoes[5][1].definaTroglodita(jogador1.retorneTroglodita(4));
+			posicoes[5][2].definaTroglodita(jogador1.retorneTroglodita(5));
+			posicoes[5][3].definaTroglodita(jogador1.retorneTroglodita(6));
+			posicoes[5][4].definaTroglodita(jogador1.retorneTroglodita(7));
+			posicoes[5][5].definaTroglodita(jogador1.retorneTroglodita(8));
+			posicoes[6][2].definaTroglodita(jogador1.retorneTroglodita(9));
+			posicoes[6][3].definaTroglodita(jogador1.retorneTroglodita(10));
+			posicoes[6][4].definaTroglodita(jogador1.retorneTroglodita(11));
+		}
+	
+	
+	
+	
+	
 	/**
 	 * MÉTODOS REFERENTES AO TABULEIRO
 	 */
+	
+	
+	
 
 	public boolean informarConectado() {
 		return conectado;
@@ -435,9 +512,14 @@ public class Tabuleiro {
 	}
 
 	public void esvaziarTabuleiro() {
+		Posicao temporaria;
+		
 		for (int linha = 0; linha < posicoes.length; linha++){
 			for (int coluna = 0; coluna < posicoes[0].length; coluna++){
-				posicoes[(linha)][(linha)].removeTroglodita();												
+				 temporaria = posicoes[(linha)][(coluna)];
+				 if(temporaria.estaOcupada()){
+					 temporaria.removeTroglodita();
+				 }
 			};
 		};	
 		jogador1 = null;
@@ -448,83 +530,39 @@ public class Tabuleiro {
 	public void habilitar(int posicao) {
 		if(posicao == 1){
 			jogador1.defineDaVez(true);
+			jogador2.defineDaVez(false);
 			
 			jogador1.assumirSimbolo(true);
 			jogador2.assumirSimbolo(false);
 		} else {
 			jogador2.defineDaVez(true);
+			jogador1.defineDaVez(false);
 			
 			jogador1.assumirSimbolo(false);
 			jogador2.assumirSimbolo(true);
 		}
 		
+		partidaEmAndamento = true;
 		this.posicionarTrogloditas();
+		
+		
 	}
 	
-	/**
-	 * 	POSICIONAR TROGLODITAS
-	 */
-
-	public void posicionarTrogloditas() {															//MUDAR ASSINATURA
-		int linhas;
-		int colunas;
-		boolean colunasPar;
-		
-		linhas = posicoes.length;
-		colunas = posicoes[0].length;
-		colunasPar = (colunas % 2) == 0;
-		
-		if(!colunasPar) {
-			int cont = 0;
-			
-			for(int i = 0; i < (linhas - 1); i++){
-				
-				//Se o número da linha for MENOR que a linha do meio (posicionar trogloditas do jogador 2)
-				if(i < ((((linhas - 1) / 2) + 1))){
-					
-					//Se a linha for par for par
-					if(i % 2 == 0) {
-						for(int j = 3; j < 7; j++){
-							posicoes[i][j].definaTroglodita(jogador2.retorneTroglodita(cont));					//MENSAGEM
-							cont++;
-						}
-						
-					} else {
-						for(int j = 2; j < 6; j++){
-							posicoes[i][j].definaTroglodita(jogador2.retorneTroglodita(cont));					//MENSAGEM
-							cont++;
-						}
-					}
-				} else {
-					
-					//Se o número da linha for MAIOR que a linha do meio (posicionar trogloditas do jogador 1)
-					if(i != ((((linhas - 1) / 2) + 1))) {
-						if(i % 2 == 0) {
-							for(int j = 3; j < 7; j++){
-								posicoes[i][j].definaTroglodita(jogador1.retorneTroglodita(cont));				//MENSAGEM
-								cont++;
-							}
-						} else {
-							for(int j = 2; j < 6; j++){
-								posicoes[i][j].definaTroglodita(jogador1.retorneTroglodita(cont));				//MENSAGEM
-								cont++;
-							}
-						}
-					} else {
-						
-						//Se for a linha do meio, zerar o contador
-						cont = 0;
-					}
-				}
-			}
-		} else {
-			throw new UnsupportedOperationException();
-		}
+	public void definirPartidaEmAndamento(boolean estado){
+		this.partidaEmAndamento = estado;
 	}
+	
+	public boolean informarPartidaEmAndamento(){
+		return partidaEmAndamento;
+	}
+	
+	
 	
 	/**
 	 * IMAGEM DE TABULEIRO
 	 */
+	
+	
 	
 	public ImagemDeTabuleiro informaEstado() {
 		boolean simboloTroglodita;
@@ -543,12 +581,27 @@ public class Tabuleiro {
 					trogloditaAuxiliar = posicaoAuxiliar.retorneTroglodita();
 					simboloTroglodita = trogloditaAuxiliar.retorneSimbolo();
 					
-					if(simboloTroglodita) posicoesTraduzidas[i][j] = 1;
-					else posicoesTraduzidas[i][j] = 2;
-					
+					if(simboloTroglodita) {
+						posicoesTraduzidas[i][j] = 1;
+					}
+					else {
+						posicoesTraduzidas[i][j] = 2;
+					}
 				} else {
 					posicoesTraduzidas[i][j] = 0;
 				}
+			}
+		}
+		
+		if(pecaSelecionada){
+			Posicao auxiliar = trogloditaSelecionado.peguePosicao();
+			int linha = auxiliar.pegueLinha();
+			int coluna = auxiliar.pegueColuna();
+			
+			if(jogador1.obterSimbolo()){
+				posicoesTraduzidas[linha][coluna] = 3;
+			} else {
+				posicoesTraduzidas[linha][coluna] = 4;
 			}
 		}
 		
@@ -562,6 +615,8 @@ public class Tabuleiro {
 	 * JOGADOR
 	 */
 	
+	
+	
 	protected Jogador jogadorDaVez() {
 		if (jogador1.obterDaVez()) {
 			return jogador1;
@@ -571,19 +626,16 @@ public class Tabuleiro {
 	}
 	
 	public void criarJogador(String nomeUsuario){
-		//Fórmula matemática que define o número de trogloditas de acordo com o número de posições do tabuleiro
-		int numeroTrogloditas;
-		int numeroPosicoes;
-		
-		numeroPosicoes = ( ((((posicoes.length - 1) / 2) + 1) * (posicoes[0].length)) + 
-							(((posicoes.length - 1) / 2) * (posicoes[0].length - 1)) );
-		
-		numeroTrogloditas = numeroPosicoes / 4;
+		int numeroTrogloditas = 12;
 		
 		if (jogador1 == null){
 			jogador1 = new Jogador(nomeUsuario, numeroTrogloditas);
 		}else{
 			jogador2 = new Jogador(nomeUsuario, numeroTrogloditas);
 		}
+	}
+	
+	public boolean jogador1EhJogador() {
+		return jogador1.ehVencedor();
 	}
 }
