@@ -91,18 +91,15 @@ public class AtorJogador {
 	}
 
 	public void tratarIniciarPartida(int posicao) {
-		System.out.println("Vou iniciar partida.");
 		tabuleiro.esvaziarTabuleiro();
-		System.out.println("Esvaziei o Tabuleiro");
 		tabuleiro.criarJogador(nomeUsuario);
-		System.out.println("Criei jogador");
 		String idJogador = rede.informarNomeAdversario(nomeUsuario);
-		System.out.println("Peguei o nome do usuário 2");
 		tabuleiro.criarJogador(idJogador);
-		System.out.println("Criei jogador");
 		tabuleiro.habilitar(posicao);
-		System.out.println("Habilitei");
 		janela.exibirEstado();
+		if(posicao == 2){
+			janela.notificarResultado(19);
+		}
 	}
 	
 	
@@ -120,6 +117,10 @@ public class AtorJogador {
 	}
 	
 	public boolean jogador1EhVencedor(){
-		return tabuleiro.jogador1EhJogador();
+		return tabuleiro.jogador1EhVencedor();
+	}
+	
+	public String informaNomeJogador(int posicao){
+		return tabuleiro.informaNomeJogador(posicao);
 	}
 }

@@ -14,10 +14,6 @@ public class Posicao {
 	public boolean estaOcupada() {
 		return ocupada;
 	}
-	
-	public void definaOcupada(boolean ocupada){
-		this.ocupada = ocupada;
-	}
 
 	public int pegueLinha() {
 		return linha;

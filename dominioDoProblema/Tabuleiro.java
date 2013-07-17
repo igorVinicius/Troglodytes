@@ -42,10 +42,9 @@ public class Tabuleiro {
 		this.atorJogador = ator;
 	}
 
-	public int recebeClick(int linha, int coluna) {
-		boolean daVez = jogador1.obterDaVez();
-		
+	public int recebeClick(int linha, int coluna) {		
 		if(partidaEmAndamento){
+			boolean daVez = jogador1.obterDaVez();
 			if(daVez){
 				if(pecaSelecionada){
 					return this.tratarLance(linha, coluna);
@@ -69,7 +68,7 @@ public class Tabuleiro {
 		return this.tratarLance(linhaB, colunaB);															
 	}
 	
-	public int selecionarPeca(int linha, int coluna) {
+	protected int selecionarPeca(int linha, int coluna) {
 		boolean daVez;
 		boolean simboloDaVez;
 		boolean exito;
@@ -459,7 +458,7 @@ public class Tabuleiro {
 		return false;
 	}
 	
-	public void posicionarTrogloditas() {															//MUDAR ASSINATURA
+	protected void posicionarTrogloditas() {															//MUDAR ASSINATURA
 		
 			//Jogador 2:
 			
@@ -635,7 +634,15 @@ public class Tabuleiro {
 		}
 	}
 	
-	public boolean jogador1EhJogador() {
+	public boolean jogador1EhVencedor() {
 		return jogador1.ehVencedor();
+	}
+	
+	public String informaNomeJogador(int posicao){
+		if(posicao == 1){
+			return jogador1.obterNome();
+		} else {
+			return jogador1.obterNome();
+		}
 	}
 }

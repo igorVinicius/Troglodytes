@@ -103,24 +103,61 @@ public class InterfaceTroglodytes extends JFrame {
 	public InterfaceTroglodytes() {		
 		super();
 		Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
-		initialize();
+		this.setFont(new Font("Dialog", Font.BOLD, 13));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceTroglodytes.class.getResource("/imagens/trogo1.png")));
+		this.setTitle("Troglodytes");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(0, 0, 618, 568);
+		
+		//initialize();
+		
+		this.setContentPane(getStartContentPanel());	
 		setLocation((tela.width-this.getSize().width)/2,   
                 (tela.height-this.getSize().height)/2);
 		
 	}
 	
+	private void cliqueInicial(){
+		contentPane = null;
+		initialize();
+	}
+	
+	private JPanel getStartContentPanel(){
+		Icon startGame = new ImageIcon((InterfaceTroglodytes.class.getResource("/imagens/startGame.png")));
+		
+		contentPane = new JPanel();
+		contentPane.setLayout(null);	
+		
+		JLabel imagemDeFundo = new JLabel();
+		imagemDeFundo.setIcon(startGame);
+		imagemDeFundo.setBounds(2, 30, 606, 498);
+		imagemDeFundo.setVisible(true);
+		contentPane.add(imagemDeFundo);
+		
+		JLabel start = new JLabel();
+		start.setBounds(221, 300, 205, 102);
+		start.setVisible(true);
+		contentPane.add(start);
+		start.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				cliqueInicial(); 
+			}
+		});
+		
+		return contentPane;
+	}
+	
 	private void initialize(){
-		this.setFont(new Font("Dialog", Font.BOLD, 13));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceTroglodytes.class.getResource("/imagens/trogo1.png")));
-		this.setTitle("Troglodytes");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(0, 0, 618, 568); //DEIXAR RELATIVO A CENTRALIZAÇÃO
 		this.setContentPane(getContentPanel());	
 	    jMenuBar = new JMenuBar();
 		jMenuBar.add(getMenu());
 		jMenuBar.add(getMenuSobre());
 		this.setJMenuBar(jMenuBar);	
-		atorJogador = new AtorJogador(this); 
+		atorJogador = new AtorJogador(this);
+		this.setVisible(true);
+		JOptionPane.showMessageDialog(this, "Bem vindo ao jogo Troglodytes em rede! \n\nPara jogar, conecte-se clicando no " +
+				"menu \"Conectar\". \nA partir daí você tem duas opções: \n\n-Esperar alguém iniciar partida; \n\n-Iniciar uma" +
+				" partida clicando em \"Iniciar nova partida\" e aguardar alguém se conectar! \n\n Divirta-se!");
 	}
 
 	private JPanel getContentPanel(){
@@ -821,7 +858,7 @@ public class InterfaceTroglodytes extends JFrame {
 	        	case 3:  JOptionPane.showMessageDialog(this, "Desconexão efetuada com exito"); break;
 	        	case 4:  JOptionPane.showMessageDialog(this, "Tentativa de desconexao sem conexao previamente estabelecida"); break;
 	        	case 5:  JOptionPane.showMessageDialog(this, "Tentativa de desconexao falhou"); break;
-	        	case 6:  JOptionPane.showMessageDialog(this, "Solicitação de inicio procedida com êxito"); break;
+	        	case 6:  JOptionPane.showMessageDialog(this, "O jogo iniciou, e você começa jogando!"); break;
 	        	case 7:  JOptionPane.showMessageDialog(this, "Tentativa de inicio sem conexao previamente estabelecida"); break;
 	        	case 8:  JOptionPane.showMessageDialog(this, "Não é a sua vez"); break;
 	        	case 9:  {
@@ -863,8 +900,9 @@ public class InterfaceTroglodytes extends JFrame {
 	        		break;
 	        	}
 	        	case 17: JOptionPane.showMessageDialog(this, "A partida corrente não pode ser interrompida!"); break;
-	        	case 18: JOptionPane.showMessageDialog(this, "O jogo ainda não começou! Se conecte e aguarde uma solicitação" +
+	        	case 18: JOptionPane.showMessageDialog(this, "O jogo ainda não começou! Conecte-se e aguarde uma solicitação" +
 	        											" ou clique em \"Iniciar nova partida\"!"); break;
+	        	case 19: JOptionPane.showMessageDialog(this, "A partida começou! Aguarde a primeira jogada de " + atorJogador.informaNomeJogador(1)); break;
 			};
 		}	
 		

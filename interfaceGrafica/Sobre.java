@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 
@@ -31,6 +33,10 @@ public class Sobre extends JFrame {
 
 	
 	public Sobre() {
+		Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();	
+		setLocation((tela.width-this.getSize().width)/2,   
+                (tela.height-this.getSize().height)/2);
+		
 		setFont(new Font("Dialog", Font.BOLD, 12));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Sobre.class.getResource("/imagens/logoSobre.png")));
 		setTitle("Sobre");
