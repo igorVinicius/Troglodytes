@@ -102,14 +102,12 @@ public class AtorJogador {
 		}
 	}
 	
-	
-	
+		
 	public void receberLance(Lance lance) {
 		int resultado = tabuleiro.executarLanceRecebido(lance);
 		janela.exibirEstado();
 		janela.notificarResultado(resultado);
 	}
-
 	
 	
 	public InterfaceTroglodytes informarJanela(){
@@ -122,5 +120,9 @@ public class AtorJogador {
 	
 	public String informaNomeJogador(int posicao){
 		return tabuleiro.informaNomeJogador(posicao);
+	}
+	
+	public boolean informarSimboloDaVez(){
+		return tabuleiro.informarSimboloDaVez();
 	}
 }

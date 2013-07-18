@@ -57,12 +57,11 @@ public class Tabuleiro {
 		return 18;
 	}
 	
-	public int executarLanceRecebido(Lance lance) {															//MUDAR ASSINATURA
+	public int executarLanceRecebido(Lance lance) {
 		int linhaA = lance.pegueLinhaOrigem();
 		int colunaA = lance.pegueColunaOrigem();
 		int linhaB = lance.pegueLinhaDestino();
 		int colunaB = lance.pegueColunaDestino();
-		System.out.println("JOGADA RECEBIDA");
 		
 		this.selecionarPeca(linhaA, colunaA);														
 		return this.tratarLance(linhaB, colunaB);															
@@ -221,10 +220,10 @@ public class Tabuleiro {
 				
 				if(linhaA % 2 == 0) {
 					distanciaVertical = (sentidoVertical == 1
-						&& diferencaEntreColunas && sentidoHorizontal != 2);					
+						&& diferencaEntreColunas && sentidoHorizontal != 2 && (linhaA - linhaB) == 1);					
 				} else {
 					distanciaVertical = (sentidoVertical == 1
-							&& diferencaEntreColunas && sentidoHorizontal != 1);
+							&& diferencaEntreColunas && sentidoHorizontal != 1 && (linhaA - linhaB) == 1);
 				}				
 
 				// Está subindo, a diferença entre as colunas é 0 ou 1 (NÃO PODE
@@ -408,17 +407,15 @@ public class Tabuleiro {
 		if(daVez){
 			haAdversarios = jogador2.haTrogloditas();
 			
-			System.out.println(haAdversarios);
-			
 			if(!haAdversarios){
 				return true;
 			}
 			
 			boolean simboloJogador1 = jogador1.obterSimbolo();
-																								//MODIFICAÇÃO
-			for(int j = 0; j < posicoes[0].length; j++){										//MODIFICAÇÃO
+
+			for(int j = 0; j < posicoes[0].length; j++){
 				posicaoTemporaria = posicoes[0][j];
-				ocupada = posicaoTemporaria.estaOcupada();										//MENSAGEM
+				ocupada = posicaoTemporaria.estaOcupada();
 				
 				if(ocupada){
 					troglodita = posicaoTemporaria.retorneTroglodita();
@@ -438,10 +435,10 @@ public class Tabuleiro {
 			}
 			
 			boolean simboloJogador2 = jogador2.obterSimbolo();
-																									//MODIFICAÇÃO
-			for(int j = 0; j < posicoes[0].length; j++){										//MODIFICAÇÃO
+
+			for(int j = 0; j < posicoes[0].length; j++){
 				posicaoTemporaria = posicoes[6][j];
-				ocupada = posicaoTemporaria.estaOcupada();										//MENSAGEM
+				ocupada = posicaoTemporaria.estaOcupada();
 				
 				if(ocupada){
 					troglodita = posicaoTemporaria.retorneTroglodita();
@@ -458,7 +455,7 @@ public class Tabuleiro {
 		return false;
 	}
 	
-	protected void posicionarTrogloditas() {															//MUDAR ASSINATURA
+	protected void posicionarTrogloditas() {
 		
 			//Jogador 2:
 			
@@ -643,6 +640,14 @@ public class Tabuleiro {
 			return jogador1.obterNome();
 		} else {
 			return jogador1.obterNome();
+		}
+	}
+
+	public boolean informarSimboloDaVez() {
+		if(jogador1.obterDaVez()){
+			return jogador1.obterSimbolo();
+		} else {
+			return jogador2.obterSimbolo();
 		}
 	}
 }

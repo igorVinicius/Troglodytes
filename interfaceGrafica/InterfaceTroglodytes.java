@@ -1,5 +1,6 @@
 package interfaceGrafica;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -21,7 +22,16 @@ import dominioDoProblema.AtorJogador;
 
 public class InterfaceTroglodytes extends JFrame {
 	
+	Icon azul = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trogo1.png"));
+	Icon marrom = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trogo2.png"));
+	Icon vazia = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/vazio.png"));
+	Icon azulPreenchida = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trog1Selecionado.png"));
+	Icon marromPreenchida = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trog2Selecionado.png"));
+	
 	private static final long serialVersionUID = 1L;
+	
+	private final String online = "Online";
+	private final String offline = "Offline";
 
     protected AtorJogador atorJogador; 
 	private JPanel contentPane = null;
@@ -82,7 +92,12 @@ public class InterfaceTroglodytes extends JFrame {
 	private JLabel posicao64 = null;
 	private JLabel posicao65 = null;
 	private JLabel posicao66 = null;
+	
+	private JLabel daVez = null;
 
+	private JLabel statusRede = null;
+	
+	private JLabel nomeJogadorAdversario = null;
 	
 	protected JLabel mapaPosicao[][] = new JLabel[7][7];
 	
@@ -130,7 +145,7 @@ public class InterfaceTroglodytes extends JFrame {
 		
 		JLabel imagemDeFundo = new JLabel();
 		imagemDeFundo.setIcon(startGame);
-		imagemDeFundo.setBounds(2, 30, 606, 498);
+		imagemDeFundo.setBounds(0, 16, 606, 498);
 		imagemDeFundo.setVisible(true);
 		contentPane.add(imagemDeFundo);
 		
@@ -169,6 +184,27 @@ public class InterfaceTroglodytes extends JFrame {
 			
 			Icon vazia = new ImageIcon((InterfaceTroglodytes.class.getResource("/imagens/vazio.png")));
 			Icon floresta = new ImageIcon((InterfaceTroglodytes.class.getResource("/imagens/floresta.png")));
+			
+			/**
+			
+			nomeJogadorAdversario = new JLabel(offline);
+			nomeJogadorAdversario.setBounds(280, 30, 50, 20); 
+			nomeJogadorAdversario.setForeground(Color.lightGray);
+			nomeJogadorAdversario.setFont(new Font("Calibri", Font.ITALIC, 16));
+			contentPane.add(nomeJogadorAdversario);
+			
+			*/
+			
+			daVez = new JLabel("");
+			daVez.setIcon(vazia);
+			daVez.setBounds(535, 13, 50, 44);
+			contentPane.add(daVez);
+			
+			statusRede = new JLabel(offline);
+			statusRede.setBounds(280, 30, 50, 20); 
+			statusRede.setForeground(Color.lightGray);
+			statusRede.setFont(new Font("Calibri", Font.ITALIC, 16));
+			contentPane.add(statusRede);
 
 						
 			posicao00 = new JLabel("");
@@ -757,7 +793,7 @@ public class InterfaceTroglodytes extends JFrame {
 				menuSobre = new JMenu();
 				menuSobre.setText("Sobre");
 				menuSobre.addMouseListener(new MouseAdapter() {
-					public void mouseed(MouseEvent arg0) {
+					public void mouseClicked(MouseEvent arg0) {
 						  	Sobre frame = new Sobre();  
 					        frame.setVisible(true);  
 					        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -770,12 +806,22 @@ public class InterfaceTroglodytes extends JFrame {
 
 		public void conectar() {
 			int resultado = atorJogador.conectar(); 
+			
+			if(resultado == 0 || resultado == 1){				
+				statusRede.setText(online);
+			}
+			
 			this.notificarResultado(resultado);
 		}
 
 
 		public void desconectar() {
 			int resultado = atorJogador.desconectar();
+			
+			if(resultado != 0 || resultado != 1){	
+				statusRede.setText(offline);
+			}
+			
 			this.notificarResultado(resultado);
 		}
 
@@ -792,7 +838,7 @@ public class InterfaceTroglodytes extends JFrame {
 		}
 		
 		public String obterIdServidor() {
-			String idServidor = ("localhost");//"venus.inf.ufsc.br");
+			String idServidor = ("venus.inf.ufsc.br");
 			idServidor = JOptionPane.showInputDialog(this, ("Insira o endereço do servidor"), idServidor);
 			return idServidor;
 		}
@@ -807,7 +853,7 @@ public class InterfaceTroglodytes extends JFrame {
 				this.notificarResultado(resultado);
 			}
 			
-		}	
+		}
 		
 		public void exibirEstado() {
 			ImagemDeTabuleiro estado; 
@@ -817,13 +863,16 @@ public class InterfaceTroglodytes extends JFrame {
 		
 		public void atualizarWidgets(ImagemDeTabuleiro estado) {
 			int valor = 0;
-			
-			Icon azul = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trogo1.png"));
-			Icon marrom = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trogo2.png"));
-			Icon vazia = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/vazio.png"));
-			Icon azulPreenchida = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trog1Selecionado.png"));
-			Icon marromPreenchida = new ImageIcon(InterfaceTroglodytes.class.getResource("/imagens/trog2Selecionado.png"));
 			int colunaLimite;
+			boolean simboloDaVez;
+			
+			simboloDaVez = atorJogador.informarSimboloDaVez();
+			
+			if(simboloDaVez){
+				daVez.setIcon(azulPreenchida);
+			} else {
+				daVez.setIcon(marromPreenchida);
+			}
 			
 			for (int linha = 0; linha < 7; linha++){
 				if(linha % 2 == 0){
@@ -875,34 +924,34 @@ public class InterfaceTroglodytes extends JFrame {
 	        		break;
 	        	}
 	        	case 10: {
-	        		JOptionPane.showMessageDialog(this, "É a sua vez!");
+	        		//JOptionPane.showMessageDialog(this, "É a sua vez!");
 	        		break;
 	        	}
 	        	case 11: {
-	        		JOptionPane.showMessageDialog(this, "Você não pode clicar numa posição vazia");
-	        		break;
+	        		//JOptionPane.showMessageDialog(this, "Você não pode clicar numa posição vazia");
+	        		//break;
 	        	}
 	        	case 12: JOptionPane.showMessageDialog(this, "Este troglodita não é seu!"); break;
 	        	case 13: {
-	        		JOptionPane.showMessageDialog(this, "Distância não permitida"); 
-	        		break;
+	        		//JOptionPane.showMessageDialog(this, "Distância não permitida"); 
+	        		//break;
 	        	}
 	        	case 14: {
-	        		JOptionPane.showMessageDialog(this, "Não há blocos suficientes para a movimentação"); 
-	        		break;
+	        		//JOptionPane.showMessageDialog(this, "Não há blocos suficientes para a movimentação"); 
+	        		//break;
 	        	}
 	        	case 15: {
-	        		JOptionPane.showMessageDialog(this, "Não pode mover, pois há peças suas no intervalo!"); 
-	        		break;
+	        		//JOptionPane.showMessageDialog(this, "Não pode mover, pois há peças suas no intervalo!"); 
+	        		//break;
 	        	}
 	        	case 16: {
-	        		JOptionPane.showMessageDialog(this, "Peça selecionada!"); 
-	        		break;
+	        		//JOptionPane.showMessageDialog(this, "Peça selecionada!"); 
+	        		//break;
 	        	}
 	        	case 17: JOptionPane.showMessageDialog(this, "A partida corrente não pode ser interrompida!"); break;
 	        	case 18: JOptionPane.showMessageDialog(this, "O jogo ainda não começou! Conecte-se e aguarde uma solicitação" +
 	        											" ou clique em \"Iniciar nova partida\"!"); break;
-	        	case 19: JOptionPane.showMessageDialog(this, "A partida começou! Aguarde a primeira jogada de " + atorJogador.informaNomeJogador(1)); break;
+	        	case 19: JOptionPane.showMessageDialog(this, "A partida começou! Aguarde a primeira jogada de " + atorJogador.informaNomeJogador(2)); break;
 			};
 		}	
 		

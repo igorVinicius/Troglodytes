@@ -16,32 +16,17 @@ public class Sobre extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Sobre frame = new Sobre();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	
 	public Sobre() {
 		Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();	
-		setLocation((tela.width-this.getSize().width)/2,   
-                (tela.height-this.getSize().height)/2);
 		
 		setFont(new Font("Dialog", Font.BOLD, 12));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Sobre.class.getResource("/imagens/logoSobre.png")));
 		setTitle("Sobre");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 250);
+		setBounds(0, 0, 450, 250);
+		setLocation((tela.width-this.getSize().width)/2,   
+                (tela.height-this.getSize().height)/2);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
