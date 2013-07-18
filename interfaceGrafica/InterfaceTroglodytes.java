@@ -911,7 +911,7 @@ public class InterfaceTroglodytes extends JFrame {
 	        	case 7:  JOptionPane.showMessageDialog(this, "Tentativa de inicio sem conexao previamente estabelecida"); break;
 	        	case 8:  JOptionPane.showMessageDialog(this, "Não é a sua vez"); break;
 	        	case 9:  {
-	        		System.out.println("Cheguei aqui!");
+	        		
 	        		boolean jogador1EhVencedor = atorJogador.jogador1EhVencedor();
 	        		
 	        		if(jogador1EhVencedor){
@@ -929,24 +929,28 @@ public class InterfaceTroglodytes extends JFrame {
 	        	}
 	        	case 11: {
 	        		//JOptionPane.showMessageDialog(this, "Você não pode clicar numa posição vazia");
-	        		//break;
+	        		break;
 	        	}
-	        	case 12: JOptionPane.showMessageDialog(this, "Este troglodita não é seu!"); break;
+	        	case 12: {
+	        		JOptionPane.showMessageDialog(this, "Este troglodita não é seu!");
+	        		break;
+	        	}
+	        		
 	        	case 13: {
 	        		//JOptionPane.showMessageDialog(this, "Distância não permitida"); 
-	        		//break;
+	        		break;
 	        	}
 	        	case 14: {
 	        		//JOptionPane.showMessageDialog(this, "Não há blocos suficientes para a movimentação"); 
-	        		//break;
+	        		break;
 	        	}
 	        	case 15: {
 	        		//JOptionPane.showMessageDialog(this, "Não pode mover, pois há peças suas no intervalo!"); 
-	        		//break;
+	        		break;
 	        	}
 	        	case 16: {
 	        		//JOptionPane.showMessageDialog(this, "Peça selecionada!"); 
-	        		//break;
+	        		break;
 	        	}
 	        	case 17: JOptionPane.showMessageDialog(this, "A partida corrente não pode ser interrompida!"); break;
 	        	case 18: JOptionPane.showMessageDialog(this, "O jogo ainda não começou! Conecte-se e aguarde uma solicitação" +

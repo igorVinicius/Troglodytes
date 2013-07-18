@@ -408,6 +408,9 @@ public class Tabuleiro {
 			haAdversarios = jogador2.haTrogloditas();
 			
 			if(!haAdversarios){
+				jogador1.defineDaVez(false);
+				jogador1.defineVencedor();
+				
 				return true;
 			}
 			
@@ -431,6 +434,9 @@ public class Tabuleiro {
 			haAdversarios = jogador1.haTrogloditas();
 			
 			if(!haAdversarios){
+				jogador2.defineDaVez(false);
+				jogador2.defineVencedor();
+				
 				return true;
 			}
 			
@@ -639,7 +645,7 @@ public class Tabuleiro {
 		if(posicao == 1){
 			return jogador1.obterNome();
 		} else {
-			return jogador1.obterNome();
+			return jogador2.obterNome();
 		}
 	}
 
